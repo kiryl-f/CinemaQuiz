@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/plenka_yellow"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/guessFilmLayout"
+        android:layout_below="@id/circleImageView"
+        android:layout_width="match_parent"
+        android:background="@drawable/main_menu_button_bg"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:layout_marginBottom="5dp"
+        >
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_movie_black_24dp"
+            android:elevation="20dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            tools:ignore="ContentDescription" />
+        <Button
+            android:id="@+id/guessFilmButton"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:textStyle="italic"
+            android:layout_toEndOf="@id/img1"
+            android:background="@drawable/main_menu_button_bg"
+            android:text="@string/guess_film"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/guessDirectorLayout"
+        android:layout_below="@id/guessTvSeriesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_menu_button_bg"
+        android:elevation="10dp"
+        android:layout_marginBottom="5dp"
+        >
+        <ImageView
+            android:id="@+id/img3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_videocam_black_24dp"
+            android:elevation="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            tools:ignore="ContentDescription" />
+        <Button
+            android:id="@+id/guessActorButton"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@id/img3"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:textStyle="italic"
+            android:background="@drawable/main_menu_button_bg"
+            android:text="@string/guess_dir"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/guessQuoteLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_menu_button_bg"
+        android:layout_below="@id/guessDirectorLayout"
+        android:elevation="10dp"
+        >
+        <ImageView
+            android:id="@+id/img4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_format_quote_black_24dp"
+            android:elevation="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            tools:ignore="ContentDescription" />
+        <Button
+            android:id="@+id/guessQuoteButton"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@id/img4"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:textStyle="italic"
+            android:background="@drawable/main_menu_button_bg"
+            android:text="@string/cinema_quotes"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/guessTvSeriesLayout"
+        android:layout_below="@id/guessFilmLayout"
+        android:background="@drawable/main_menu_button_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:layout_marginBottom="5dp"
+        >
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_live_tv_black_24dp"
+            android:elevation="20dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            tools:ignore="ContentDescription" />
+        <Button
+            android:id="@+id/guessTvSeriesButton"
+            style="@android:style/Widget.Button"
+            android:layout_margin="5dp"
+            android:text="@string/guess_series"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:layout_toEndOf="@id/img2"
+            android:background="@drawable/main_menu_button_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/gameModsImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textStyle="italic"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/game_modes"
+        android:textColor="#000000"
+        android:background="#FFFDD0"
+        android:textSize="45sp"/>
+
+    <RelativeLayout
+        android:id="@+id/mainSettingsRLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adView"
+        android:layout_marginTop="20dp"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/main_menu_button_bg">
+
+        <ImageView
+            android:id="@+id/settingsImageView"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="25dp"
+            android:src="@drawable/sound_bg"
+            android:clickable="true"
+            android:onClick="onClickMenuButtons"
+            tools:ignore="ContentDescription"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@+id/exitAppImageView"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:src="@drawable/exit_bg"
+            android:layout_centerInParent="true"
+            android:clickable="true"
+            android:onClick="onClickMenuButtons"
+            tools:ignore="ContentDescription"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@+id/rateAppImageView"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:src="@drawable/stars_bg"
+            android:layout_marginStart="25dp"
+            android:onClick="onClickMenuButtons"
+            tools:ignore="ContentDescription" />
+        </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/circleImageView"
+        android:layout_width="180dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/gameModsImageView"
+        android:layout_centerInParent="true"
+        android:src="@drawable/film_circle"
+        android:elevation="20dp"
+        android:layout_marginBottom="10dp"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        android:layout_below="@id/guessQuoteLayout"
+        android:layout_marginTop="20dp"
+        ads:adUnitId="ca-app-pub-6532809968895987/6475280687">
+    </com.google.android.gms.ads.AdView>
+
+</RelativeLayout>
