@@ -16,8 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.kirvelstudios.cinemaquiz.DirectorLevelActivities.AllDirActivity;
 import com.kirvelstudios.cinemaquiz.databinding.ActivityMainBinding;
 
@@ -40,18 +38,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         ImageView view = findViewById(R.id.circleImageView);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, InfoActivity.class));
-            }
-        });
+        view.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, InfoActivity.class)));
         locale = Locale.getDefault().getLanguage();
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
+        MobileAds.initialize(this, initializationStatus -> {
         });
 
         AdView mAdView = findViewById(R.id.adView);
@@ -60,56 +50,28 @@ public class MainActivity extends AppCompatActivity {
 
         setSettingsImageView();
 
-        binding.guessFilmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EasyGuessFilmActivity.class);
-                String localeUpCase = locale.toUpperCase(), localeLowCase = locale.toLowerCase(), region;
-                if(locale.equals("en")) {
-                    region = "US";
-                } else {
-                    region = localeUpCase;
-                }
-                intent.putExtra("key","33d65e0ed0777308653502b72db75fd0");
-                intent.putExtra("language", localeLowCase+'-'+localeUpCase);
-                intent.putExtra("region", region);
-                intent.putExtra("nameType", "title");
-                intent.putExtra("type", "movie");
-                intent.putExtra("tmdbLink1","https://api.themoviedb.org/3/movie/");
-                intent.putExtra("nameType", "title");
-                intent.putExtra("type", "movie");
-                startActivity(intent);
+        binding.guessFilmButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, EasyGuessFilmActivity.class);
+            String localeUpCase = locale.toUpperCase(), localeLowCase = locale.toLowerCase(), region;
+            if(locale.equals("en")) {
+                region = "US";
+            } else {
+                region = localeUpCase;
             }
+            intent.putExtra("key","33d65e0ed0777308653502b72db75fd0");
+            intent.putExtra("language", localeLowCase+'-'+localeUpCase);
+            intent.putExtra("region", region);
+            intent.putExtra("nameType", "title");
+            intent.putExtra("type", "movie");
+            intent.putExtra("tmdbLink1","https://api.themoviedb.org/3/movie/");
+            intent.putExtra("nameType", "title");
+            intent.putExtra("type", "movie");
+            startActivity(intent);
         });
 
-        binding.guessActorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AllDirActivity.class));
-            }
-        });
+        binding.guessActorButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, AllDirActivity.class)));
 
-        binding.guessQuoteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               startActivity(new Intent(MainActivity.this,QuoteActivity.class));
-            }
-        });
-
-        binding.guessTvSeriesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EasyGuessFilmActivity.class);
-                String localeUpCase = locale.toUpperCase(), localeLowCase = locale.toLowerCase();
-                intent.putExtra(
-                        "url",
-                        "https://api.themoviedb.org/3/tv/popular?api_key=33d65e0ed0777308653502b72db75fd0&language="+localeLowCase+'-'+localeUpCase+"&region="+localeUpCase+"&page=");
-                intent.putExtra("tmdbLink1","https://api.themoviedb.org/3/tv/");
-                intent.putExtra("nameType", "name");
-                intent.putExtra("type", "tv");
-                startActivity(intent);
-            }
-        });
+        binding.guessQuoteButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this,QuoteActivity.class)));
     }
 
     @Override

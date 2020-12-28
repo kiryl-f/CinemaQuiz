@@ -38,15 +38,6 @@ public class SplashActivity extends AppCompatActivity {
         filmIntent.putExtra("nameType", "title");
         filmIntent.putExtra("type", "movie");
 
-        Intent seriesIntent = new Intent(SplashActivity.this, EasyGuessFilmActivity.class);
-        seriesIntent.setAction(Intent.ACTION_VIEW);
-        seriesIntent.putExtra(
-                "url",
-                "https://api.themoviedb.org/3/tv/popular?api_key=33d65e0ed0777308653502b72db75fd0&language="+localeLowCase+'-'+localeUpCase+"&region="+localeUpCase+"&page=");
-        seriesIntent.putExtra("tmdbLink1","https://api.themoviedb.org/3/tv/");
-        seriesIntent.putExtra("nameType", "name");
-        seriesIntent.putExtra("type", "tv");
-
         Intent dirIntent = new Intent(SplashActivity.this, AllDirActivity.class);
         dirIntent.setAction(Intent.ACTION_VIEW);
 
@@ -63,12 +54,6 @@ public class SplashActivity extends AppCompatActivity {
                     .setIntent(filmIntent)
                     .build();
 
-            ShortcutInfo shortcut1 = new ShortcutInfo.Builder(getApplicationContext(), "series")
-                    .setShortLabel(getResources().getString(R.string.guess_series))
-                    .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_live_tv_black_24dp))
-                    .setIntent(seriesIntent)
-                    .build();
-
             ShortcutInfo dirShortcut = new ShortcutInfo.Builder(getApplicationContext(), "dir")
                     .setShortLabel(getResources().getString(R.string.guess_dir))
                     .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_videocam_black_24dp))
@@ -80,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
                     .setIcon(Icon.createWithResource(getApplicationContext(), R.drawable.ic_format_quote_black_24dp))
                     .setIntent(quoteIntent)
                     .build();
-            Objects.requireNonNull(shortcutManager).setDynamicShortcuts(Arrays.asList(shortcut, shortcut1, dirShortcut, quoteShortcut));
+            Objects.requireNonNull(shortcutManager).setDynamicShortcuts(Arrays.asList(shortcut, dirShortcut, quoteShortcut));
 
         }
 
