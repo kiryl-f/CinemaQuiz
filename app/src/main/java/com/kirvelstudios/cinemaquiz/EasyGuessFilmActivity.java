@@ -16,7 +16,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +40,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -50,6 +48,7 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.kirvelstudios.cinemaquiz.databinding.ActivityGuessFilmBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,14 +68,13 @@ import static com.kirvelstudios.cinemaquiz.R.drawable.shadow_red;
 
 public class EasyGuessFilmActivity extends AppCompatActivity {
 
+    ActivityGuessFilmBinding binding;
+
     ArrayList<Movie> movies = new ArrayList<>();
-    ImageView filmImageView, imdbImage, nextFilmImage, hpImageView;
     int curFilm = 0, score = 0, hp = 3;
     String filmName, url = "", nameType = "", type = "";
-    ProgressBar progressBar;
     ArrayList <String> used = new ArrayList<>();
     int[] nums;
-    int a = 1;
 
     private RequestQueue requestQueue, imdbRequestQueue;
 
@@ -89,9 +87,18 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
 
-    private FloatingActionsMenu floatingActionsMenu;
-    private ImageView refreshImageView;
-    private FloatingActionButton floatingActionButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        binding = ActivityGuessFilmBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        createActivity();
+    }
 
     @Override
     protected void onStop() {
@@ -116,17 +123,6 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        setContentView(R.layout.activity_easy_guess_film);
-
-        createActivity();
-    }
-
     private void createActivity() {
         nums = new int[] {R.drawable.heart, R.drawable.heart2, R.drawable.heart3};
 
@@ -149,11 +145,11 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
         if(hp == 0) {
             hp = 3;
         }
-        hpImageView.setImageResource(nums[hp-1]);
+        binding.hpImageView.setImageResource(nums[hp-1]);
         setScore();
 
         movies.clear();
-        nextFilmImage.setImageResource(R.drawable.arrow_right_transparent);
+        binding.nextFilmImage.setImageResource(R.drawable.arrow_right_transparent);
         buttonsClickable(false);
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -188,10 +184,10 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             if(!isStarted) {
-                                nextFilmImage.setClickable(true);
-                                nextFilmImage.setImageResource(R.drawable.arrow_right);
-                                progressBar.setVisibility(View.INVISIBLE);
-                                nextFilmImage.callOnClick();
+                                binding.nextFilmImage.setClickable(true);
+                                binding.nextFilmImage.setImageResource(R.drawable.arrow_right);
+                                binding.nextFilmImage.callOnClick();
+                                binding.filmProgressBar.setVisibility(View.INVISIBLE);
                                 setOnClickButtons();
                                 isStarted = true;
                             }
@@ -203,9 +199,9 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            nextFilmImage.setClickable(false);
-                            nextFilmImage.setImageResource(R.drawable.arrow_right_transparent);
-                            progressBar.setVisibility(VISIBLE);
+                            binding.nextFilmImage.setClickable(false);
+                            binding.nextFilmImage.setImageResource(R.drawable.arrow_right_transparent);
+                            binding.filmProgressBar.setVisibility(VISIBLE);
                             isStarted = false;
                         }
                     });
@@ -217,26 +213,26 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
 
         setAllMovies();
 
-        nextFilmImage.setOnClickListener(new View.OnClickListener() {
+        binding.nextFilmImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(movies.size() < 1) {
                     setAllMovies();
                 }
-                if(floatingActionsMenu.isExpanded()) {
-                    floatingActionsMenu.collapse();
+                if(binding.floatingActionMenu.isExpanded()) {
+                    binding.floatingActionMenu.collapse();
                 }
                 if(flag) {
                     nextFilm();
                     flag = false;
                     curFilm++;
                     isAnswered = false;
-                    nextFilmImage.setImageResource(R.drawable.arrow_right_transparent);
+                    binding.nextFilmImage.setImageResource(R.drawable.arrow_right_transparent);
                 }
             }
         });
 
-        imdbImage.setOnClickListener(new View.OnClickListener() {
+        binding.imdb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openIMDBWebView();
@@ -246,7 +242,7 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
     }
 
     private void createRewardedAd() {
-        rewardedAd = new RewardedAd(this, "ca-app-pub-6532809968895987/7693117297");
+        rewardedAd = new RewardedAd(this, "ca-app-pub-2610039287877034/8745403536");
         RewardedAdLoadCallback loadCallback = new RewardedAdLoadCallback() {
             @Override
             public void onRewardedAdFailedToLoad(int i) {
@@ -263,25 +259,16 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
             floatingActionButton.setIcon(R.drawable.ic_volume_off_orange);
         }
     }
+
     private void iniXmlElements() {
-        imdbImage = findViewById(R.id.imdb);
-        progressBar = findViewById(R.id.filmProgressBar);
         setButtons();
-        nextFilmImage = findViewById(R.id.nextFilmImage);
-        filmImageView = findViewById(R.id.filmImageView);
-        hpImageView = findViewById(R.id.hpImageView);
-        floatingActionsMenu = findViewById(R.id.floatingActionMenu);
-        floatingActionButton = findViewById(R.id.settingsItem);
-        setSoundIcon(floatingActionButton);
-        refreshImageView = findViewById(R.id.refreshImageView);
-        refreshImageView.setOnClickListener(new View.OnClickListener() {
+        setSoundIcon(binding.settingsItem);
+        binding.refreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 refreshImage(movies.get(curFilm).getPosterUrl());
             }
         });
-        nextFilmImage.setVisibility(VISIBLE);
-        filmImageView.setVisibility(VISIBLE);
     }
 
     private void playSound(boolean correct) {
@@ -312,29 +299,20 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
             buttons.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(a == 1) {
-                        if(type.equals("tv")) {
-                            Random x = new Random();
-                            int r = x.nextInt((100 - 10) + 10) + 1;
-                            MPSquad squad = new MPSquad();
-                            movies.add(r, squad);
-                        }
-                        a = 0;
-                    }
                     isAnswered = true;
-                    if(floatingActionsMenu.isExpanded()) {
-                        floatingActionsMenu.collapse();
+                    if(binding.floatingActionMenu.isExpanded()) {
+                        binding.floatingActionMenu.collapse();
                     }
-                    nextFilmImage.setImageResource(R.drawable.arrow_right_bg);
+                    binding.nextFilmImage.setImageResource(R.drawable.arrow_right_bg);
                     flag = true;
                     Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.right_in);
-                    imdbImage.startAnimation(animation);
+                    binding.imdb.startAnimation(animation);
                     if(type.equals("tv")) {
-                        imdbImage.setImageResource(R.drawable.ic_link_black_24dp);
+                        binding.imdb.setImageResource(R.drawable.ic_link_black_24dp);
                     } else {
-                        imdbImage.setImageResource(R.drawable.imdb_logo);
+                        binding.imdb.setImageResource(R.drawable.imdb_logo);
                     }
-                    imdbImage.setClickable(true);
+                    binding.imdb.setClickable(true);
                     if(button.getText().toString().equals(filmName)) {
                         score += 50;
                         if(sound) {
@@ -349,7 +327,7 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
                     if(hp == 0) {
                         noHp();
                     } else {
-                        hpImageView.setImageResource(nums[hp-1]);
+                        binding.hpImageView.setImageResource(nums[hp-1]);
                     }
                     setScore();
                     colorButtons(filmName);
@@ -359,8 +337,8 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
     }
 
     private void noHp() {
-        if(floatingActionsMenu.isExpanded()) {
-            floatingActionsMenu.collapse();
+        if(binding.floatingActionMenu.isExpanded()) {
+            binding.floatingActionMenu.collapse();
         }
         createRewardedAd();
         String message = getResources().getString(R.string.record) + preferences.getInt("max", 0) + "\n" + getResources().getString(R.string.last_res) + score;
@@ -383,7 +361,7 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     showAd();
                     hp++;
-                    hpImageView.setImageResource(R.drawable.heart);
+                    binding.hpImageView.setImageResource(R.drawable.heart);
                     isAdUsed = true;
                 }
             });
@@ -416,15 +394,12 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
         }
         uncolorButtons();
         buttonsClickable(false);
-        if(movies.get(curFilm).getTitle().equals("MPSquad")) {
-            movies.get(curFilm).setPosterUrl("https://ru.inettools.net/upload/TvDJoMht932Jo3XGoeaKl2aK6ipZ9PhKUeY8wsK0/mpsquad.X5EsD.jpg");
-        }
         refreshImage(movies.get(curFilm).getPosterUrl());
         setMovieImdbLinkAndGenre(movies.get(curFilm).getId());
         setButtonsText(movies.get(curFilm));
         filmName = movies.get(curFilm).getTitle();
-        imdbImage.setImageResource(R.drawable.lock);
-        imdbImage.setClickable(false);
+        binding.imdb.setImageResource(R.drawable.lock);
+        binding.imdb.setClickable(false);
         Collections.shuffle(movies);
     }
 
@@ -442,7 +417,7 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        refreshImageView.setVisibility(VISIBLE);
+                        binding.refreshImageView.setVisibility(VISIBLE);
                         TextView textView = findViewById(R.id.noConTextView);
                         textView.setVisibility(VISIBLE);
                         buttonsClickable(false);
@@ -451,14 +426,14 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        refreshImageView.setVisibility(GONE);
+                        binding.refreshImageView.setVisibility(GONE);
                         TextView textView = findViewById(R.id.noConTextView);
                         textView.setVisibility(GONE);
                         buttonsClickable(true);
                         return false;
                     }
                 })
-                .into(filmImageView);
+                .into(binding.filmImageView);
     }
 
     private void noConnectionToast() {
@@ -466,8 +441,8 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
     }
 
     private void createAdShowDialog() {
-        if(floatingActionsMenu.isExpanded()) {
-            floatingActionsMenu.collapse();
+        if(binding.floatingActionMenu.isExpanded()) {
+            binding.floatingActionMenu.collapse();
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.ad))
@@ -563,33 +538,28 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
     }
 
     private void setMovieImdbLinkAndGenre(final String id) {
-        if(!id.equals("1234567890")) {
-            final String url = tmdbLink1 + id + tmdbLink2;
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        if(type.equals("tv")) {
-                            imdbLink = response.getString("homepage");
-                        } else {
-                            imdbLink = "https://www.imdb.com/title/" + response.getString("imdb_id");
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+        final String url = tmdbLink1 + id + tmdbLink2;
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if(type.equals("tv")) {
+                        imdbLink = response.getString("homepage");
+                    } else {
+                        imdbLink = "https://www.imdb.com/title/" + response.getString("imdb_id");
                     }
-
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            });
-            imdbRequestQueue.add(request);
-        } else {
-            imdbLink = "https://www.youtube.com/channel/UCrHfEmsxoXer1-0_cCoDyvg";
-        }
 
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        imdbRequestQueue.add(request);
     }
 
     public void openIMDBWebView() {
@@ -680,8 +650,8 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
     }
 
     private void fiftyFifty(final String filmName) {
-        if(floatingActionsMenu.isExpanded()) {
-            floatingActionsMenu.collapse();
+        if(binding.floatingActionMenu.isExpanded()) {
+            binding.floatingActionMenu.collapse();
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.advice))
@@ -757,7 +727,7 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
                 break;
             default:
                 sound = !sound;
-                setSoundIcon(floatingActionButton);
+                setSoundIcon(binding.settingsItem);
                 break;
         }
     }

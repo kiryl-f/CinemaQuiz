@@ -9,63 +9,35 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.kirvelstudios.cinemaquiz.DirectorLevelActivities.AllDirActivity;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.kirvelstudios.cinemaquiz.DirectorLevelActivities.AllDirActivity;
+import com.kirvelstudios.cinemaquiz.databinding.ActivityMainBinding;
 
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button guessFilmButton,guessActorButton,guessQuoteButton;
-    Button guessTvSeriesButton;
-    ImageView settingsImageView;
+    ActivityMainBinding binding;
+
     String locale;
-
-    private void setSettingsImageView() {
-        SharedPreferences preferences = getApplicationContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        if(preferences.getBoolean("sound", false)) {
-            settingsImageView.setImageResource(R.drawable.sound_bg);
-        } else {
-            settingsImageView.setImageResource(R.drawable.sound_off_bg);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        setSettingsImageView();
-        super.onResume();
-    }
-
-    @Override
-    protected void onRestart() {
-        setSettingsImageView();
-        super.onRestart();
-    }
-
-    @Override
-    protected void onStart() {
-        setSettingsImageView();
-        super.onStart();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         ImageView view = findViewById(R.id.circleImageView);
         view.setOnClickListener(new View.OnClickListener() {
@@ -86,15 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
         mAdView.loadAd(new AdRequest.Builder().build());
 
-        guessFilmButton = findViewById(R.id.guessFilmButton);
-        guessQuoteButton = findViewById(R.id.guessQuoteButton);
-        settingsImageView = findViewById(R.id.settingsImageView);
-        guessTvSeriesButton = findViewById(R.id.guessTvSeriesButton);
-        guessActorButton = findViewById(R.id.guessActorButton);
-
         setSettingsImageView();
 
-        guessFilmButton.setOnClickListener(new View.OnClickListener() {
+        binding.guessFilmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, EasyGuessFilmActivity.class);
@@ -114,21 +80,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        guessActorButton.setOnClickListener(new View.OnClickListener() {
+        binding.guessActorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, AllDirActivity.class));
             }
         });
 
-        guessQuoteButton.setOnClickListener(new View.OnClickListener() {
+        binding.guessQuoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                startActivity(new Intent(MainActivity.this,QuoteActivity.class));
             }
         });
 
-        guessTvSeriesButton.setOnClickListener(new View.OnClickListener() {
+        binding.guessTvSeriesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, EasyGuessFilmActivity.class);
@@ -144,9 +110,36 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        setSettingsImageView();
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        setSettingsImageView();
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStart() {
+        setSettingsImageView();
+        super.onStart();
+    }
+
+    private void setSettingsImageView() {
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        if(preferences.getBoolean("sound", false)) {
+            binding.soundImageView.setImageResource(R.drawable.sound_bg);
+        } else {
+            binding.soundImageView.setImageResource(R.drawable.sound_off_bg);
+        }
+    }
+
     public void onClickMenuButtons(View view) {
         switch (view.getId()) {
-            case R.id.settingsImageView:
+            case R.id.soundImageView:
                 SharedPreferences preferences = getApplicationContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 if (preferences.getBoolean("sound", false)) {
@@ -160,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     editor = preferences.edit();
                     editor.putBoolean("sound", false);
                     editor.apply();
-                    settingsImageView.setImageResource(R.drawable.sound_off_bg);
+                    binding.soundImageView.setImageResource(R.drawable.sound_off_bg);
                 } else {
                     editor.putBoolean("sound", true);
                     editor.apply();
@@ -172,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                     editor = preferences.edit();
                     editor.putBoolean("sound", true);
                     editor.apply();
-                    settingsImageView.setImageResource(R.drawable.sound_bg);
+                    binding.soundImageView.setImageResource(R.drawable.sound_bg);
                 }
                 break;
             case R.id.exitAppImageView:

@@ -15,15 +15,13 @@
         android:layout_below="@id/dividerL1"
         android:background="@drawable/lock"
         />
-   <me.grantland.widget.AutofitTextView
+   <TextView
        android:id="@+id/quoteTextView"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:gravity="center"
-       app:minTextSize="25sp"
        android:textSize="20sp"
        tools:text="@string/forrest_gump_quote"
-       app:sizeToFit="true"
        android:layout_centerInParent="true"
        android:textColor="@android:color/black"
        android:layout_above="@id/dividerL2"

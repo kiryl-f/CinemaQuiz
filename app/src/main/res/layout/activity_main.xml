@@ -172,7 +172,7 @@
         android:background="@drawable/main_menu_button_bg">
 
         <ImageView
-            android:id="@+id/settingsImageView"
+            android:id="@+id/soundImageView"
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
@@ -224,7 +224,7 @@
         ads:adSize="BANNER"
         android:layout_below="@id/guessQuoteLayout"
         android:layout_marginTop="20dp"
-        ads:adUnitId="ca-app-pub-6532809968895987/6475280687">
+        ads:adUnitId="ca-app-pub-2610039287877034/4973362251">
     </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>

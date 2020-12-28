@@ -15,8 +15,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,9 +23,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
-import com.kirvelstudios.cinemaquiz.*;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -36,7 +31,11 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.kirvelstudios.cinemaquiz.DirectorArrayList;
 import com.kirvelstudios.cinemaquiz.Directors.Director;
+import com.kirvelstudios.cinemaquiz.ImdbActivity;
+import com.kirvelstudios.cinemaquiz.R;
+import com.kirvelstudios.cinemaquiz.databinding.ActivityDirBinding;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,25 +44,22 @@ import java.util.Random;
 
 public class AllDirActivity extends AppCompatActivity {
 
-    ImageView poster;
+    ActivityDirBinding binding;
+
     ArrayList <Button> buttons = new ArrayList<>();
     ArrayList<Director> directors = new ArrayList<>();
     ArrayList <String> dirNames = new ArrayList<>(), allDirNames = new ArrayList<>();
     ArrayList <Integer> posters = new ArrayList<>();
-    ImageView nextDir, imdb, hpImageView;
-    TextView scoreTextView;
     int curDir = 0, score = 0, posterID = 0, hp;
     boolean isAdvice = false, isAdUsed = false;
     int [] nums;
     String directorName;
-    private FloatingActionsMenu floatingActionsMenu;
     boolean isAnswered = false, sound = false;
     SharedPreferences preferences;
     RewardedAd rewardedAd;
-    private FloatingActionButton floatingActionButton;
 
     private void createRewardedAd() {
-        rewardedAd = new RewardedAd(this, "ca-app-pub-6532809968895987/7693117297");
+        rewardedAd = new RewardedAd(this, "ca-app-pub-2610039287877034/8745403536");
         RewardedAdLoadCallback loadCallback = new RewardedAdLoadCallback() {
             @Override
             public void onRewardedAdFailedToLoad(int i) {
@@ -76,11 +72,12 @@ public class AllDirActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_fourth_dir_level);
 
-        iniXml();
+        binding = ActivityDirBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         preferences = getApplicationContext().getSharedPreferences("dirPrefs", Context.MODE_PRIVATE);
         sound = preferences.getBoolean("sound", false);
@@ -99,7 +96,6 @@ public class AllDirActivity extends AppCompatActivity {
         setAllDirNames();
 
         nextDirector();
-        nextDir.setClickable(false);
 
         hp = preferences.getInt("hp", 3);
         if(hp > 0) {
@@ -109,7 +105,7 @@ public class AllDirActivity extends AppCompatActivity {
             hp = 3;
         }
         nums = new int[] {R.drawable.heart, R.drawable.heart2, R.drawable.heart3};
-        hpImageView.setImageResource(nums[hp-1]);
+        binding.hpImageView.setImageResource(nums[hp-1]);
         setScore();
     }
 
@@ -159,7 +155,7 @@ public class AllDirActivity extends AppCompatActivity {
                 break;
             default:
                 sound = !sound;
-                setSoundIcon(floatingActionButton);
+                setSoundIcon();
                 break;
         }
     }
@@ -168,17 +164,17 @@ public class AllDirActivity extends AppCompatActivity {
         Toast.makeText(this, getResources().getString(R.string.net_connection), Toast.LENGTH_SHORT).show();
     }
 
-    private void setSoundIcon(FloatingActionButton floatingActionButton) {
+    private void setSoundIcon() {
         if(sound) {
-            floatingActionButton.setIcon(R.drawable.ic_volume_up_orange);
+            binding.settingsItem.setIcon(R.drawable.ic_volume_up_orange);
         } else {
-            floatingActionButton.setIcon(R.drawable.ic_volume_off_orange);
+            binding.settingsItem.setIcon(R.drawable.ic_volume_off_orange);
         }
     }
 
     @SuppressLint("SetTextI18n")
     public void setScore() {
-        scoreTextView.setText("" + score);
+        binding.scoreTextView.setText("" + score);
     }
 
     private void nextDirector() {
@@ -205,7 +201,7 @@ public class AllDirActivity extends AppCompatActivity {
         }
         posters = directors.get(curDir).getPosters();
         Collections.shuffle(posters);
-        Glide.with(getApplicationContext()).load(posters.get(0)).transition(GenericTransitionOptions.<Drawable>with(R.anim.right_in)).into(poster);
+        Glide.with(getApplicationContext()).load(posters.get(0)).transition(GenericTransitionOptions.<Drawable>with(R.anim.right_in)).into(binding.directorImageView1);
 
         for(int i = 0;i < 4;i++) {
             onButtonClick(buttons.get(i), directorName);
@@ -215,28 +211,12 @@ public class AllDirActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void iniXml() {
-        floatingActionsMenu = findViewById(R.id.floatingActionMenu);
-        nextDir = findViewById(R.id.nextDirectorImageView);
-        Button button = findViewById(R.id.firstDirector);
-        buttons.add(button);
-        button = findViewById(R.id.secondDirector);
-        buttons.add(button);
-        button = findViewById(R.id.thirdDirector);
-        buttons.add(button);
-        button = findViewById(R.id.fourthDirector);
-        buttons.add(button);
-        floatingActionButton = findViewById(R.id.settingsItem);
-        setSoundIcon(floatingActionButton);
-        hpImageView = findViewById(R.id.hpImageView);
-        scoreTextView = findViewById(R.id.scoreTextView);
-        scoreTextView.setText("" +score);
-
-        imdb = findViewById(R.id.imdb);
-
-        poster = findViewById(R.id.directorImageView1);
-
-        ImageView back = findViewById(R.id.backButton);
-        back.setOnClickListener(new View.OnClickListener() {
+        buttons.add(binding.firstDirector);
+        buttons.add(binding.secondDirector);
+        buttons.add(binding.thirdDirector);
+        buttons.add(binding.fourthDirector);
+        setSoundIcon();
+        binding.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -252,12 +232,12 @@ public class AllDirActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                if(floatingActionsMenu.isExpanded()) {
-                    floatingActionsMenu.collapse();
+                if(binding.floatingActionMenu.isExpanded()) {
+                    binding.floatingActionMenu.collapse();
                 }
                 isAnswered = true;
-                nextDir.setImageResource(R.drawable.arrow_right_bg);
-                nextDir.setClickable(true);
+                binding.nextDirectorImageView.setImageResource(R.drawable.arrow_right_bg);
+                binding.nextDirectorImageView.setClickable(true);
                 if(button.getText().toString().equals(directorName)) {
                     score += 50;
                     if(sound) {
@@ -272,21 +252,21 @@ public class AllDirActivity extends AppCompatActivity {
                 if(hp == 0) {
                     noHp();
                 } else {
-                    hpImageView.setImageResource(nums[hp-1]);
+                    binding.hpImageView.setImageResource(nums[hp-1]);
                 }
-                scoreTextView.setText("" + score);
+                binding.scoreTextView.setText("" + score);
                 colorButtons(dirName);
                 Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.right_in);
-                imdb.startAnimation(animation);
-                imdb.setImageResource(R.drawable.imdb_logo);
-                imdb.setVisibility(View.VISIBLE);
+                binding.imdb.startAnimation(animation);
+                binding.imdb.setImageResource(R.drawable.imdb_logo);
+                binding.imdb.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void noHp() {
-        if(floatingActionsMenu.isExpanded()) {
-            floatingActionsMenu.collapse();
+        if(binding.floatingActionMenu.isExpanded()) {
+            binding.floatingActionMenu.collapse();
         }
         createRewardedAd();
         String message = getResources().getString(R.string.record) + preferences.getInt("max", 0) + "\n" + getResources().getString(R.string.last_res) + score;
@@ -309,7 +289,7 @@ public class AllDirActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     showAd();
                     hp++;
-                    hpImageView.setImageResource(R.drawable.heart);
+                    binding.hpImageView.setImageResource(R.drawable.heart);
                     isAdUsed = true;
                 }
             });
@@ -354,17 +334,17 @@ public class AllDirActivity extends AppCompatActivity {
 
         iniXml();
 
-        nextDir.setOnClickListener(new View.OnClickListener() {
+        binding.nextDirectorImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(floatingActionsMenu.isExpanded()) {
-                    floatingActionsMenu.collapse();
+                if(binding.floatingActionMenu.isExpanded()) {
+                    binding.floatingActionMenu.collapse();
                 }
                 nextDirector();
                 isAnswered = false;
-                nextDir.setClickable(false);
-                imdb.setVisibility(View.GONE);
-                nextDir.setImageResource(R.drawable.arrow_right_transparent);
+                binding.nextDirectorImageView.setClickable(false);
+                binding.nextDirectorImageView.setImageResource(R.drawable.arrow_right_transparent);
+                binding.imdb.setVisibility(View.GONE);
             }
         });
     }
@@ -394,8 +374,8 @@ public class AllDirActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void advice() {
-        if(floatingActionsMenu.isExpanded()) {
-            floatingActionsMenu.collapse();
+        if(binding.floatingActionMenu.isExpanded()) {
+            binding.floatingActionMenu.collapse();
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.advice))
@@ -406,7 +386,7 @@ public class AllDirActivity extends AppCompatActivity {
                             isAdvice = true;
                             fiftyFifty();
                             score -= 25;
-                            scoreTextView.setText("" + score);
+                            binding.scoreTextView.setText("" + score);
                         } else {
                             Toast.makeText(AllDirActivity.this, getResources().getString(R.string.no_points), Toast.LENGTH_SHORT).show();
                         }
@@ -419,7 +399,7 @@ public class AllDirActivity extends AppCompatActivity {
                             if(posterID+1 != posters.size()) {
                                 anotherMovie();
                                 score -= 10;
-                                scoreTextView.setText("" + score);
+                                binding.scoreTextView.setText("" + score);
                             } else {
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_posters), Toast.LENGTH_SHORT).show();
                             }
@@ -427,13 +407,13 @@ public class AllDirActivity extends AppCompatActivity {
                     }
                 });
         builder.show();
-        scoreTextView.setText("" + score);
+        binding.scoreTextView.setText("" + score);
     }
 
     private void anotherMovie() {
         if(posterID+1 != posters.size()) {
             posterID++;
-            poster.setImageResource(posters.get(posterID));
+            binding.directorImageView1.setImageResource(posters.get(posterID));
         }
     }
 
@@ -475,7 +455,7 @@ public class AllDirActivity extends AppCompatActivity {
                 @Override
                 public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                     score += 50;
-                    scoreTextView.setText("" + score);
+                    binding.scoreTextView.setText("" + score);
                     createRewardedAd();
                 }
             };

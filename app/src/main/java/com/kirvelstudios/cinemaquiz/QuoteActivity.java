@@ -15,14 +15,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.kirvelstudios.cinemaquiz.Quotes.Quote;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.ads.AdRequest;
@@ -33,22 +31,21 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.kirvelstudios.cinemaquiz.Quotes.Quote;
+import com.kirvelstudios.cinemaquiz.databinding.ActivityQuoteBinding;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
 
-import me.grantland.widget.AutofitTextView;
-
 public class QuoteActivity extends AppCompatActivity {
 
-    AutofitTextView textView;
+    ActivityQuoteBinding binding;
+
     ArrayList <Button> buttons = new ArrayList<>();
     ArrayList <Quote> quotes = new ArrayList<>();
     ArrayList <String> filmNames = new ArrayList<>(), allQuoteNames = new ArrayList<>();
-    ImageView next, imdb, hpImageView;
-    TextView scoreTextView;
     int cur = 0, score = 0 , hp = 0;
     boolean isAdvice = false, isAdUsed = false;
     int [] nums;
@@ -61,7 +58,7 @@ public class QuoteActivity extends AppCompatActivity {
     private FloatingActionsMenu floatingActionsMenu;
 
     private void createRewardedAd() {
-        rewardedAd = new RewardedAd(this, "ca-app-pub-6532809968895987/7693117297");
+        rewardedAd = new RewardedAd(this, "ca-app-pub-2610039287877034/8745403536");
         RewardedAdLoadCallback loadCallback = new RewardedAdLoadCallback() {
             @Override
             public void onRewardedAdFailedToLoad(int i) {
@@ -76,7 +73,9 @@ public class QuoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_quote);
+
+        binding = ActivityQuoteBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         iniXml();
 
@@ -97,7 +96,7 @@ public class QuoteActivity extends AppCompatActivity {
         setAllDirNames();
 
         nextDirector();
-        next.setClickable(false);
+        binding.nextQuoteImage.setClickable(false);
 
         hp = preferences.getInt("hp", 3);
         if(hp > 0) {
@@ -107,10 +106,10 @@ public class QuoteActivity extends AppCompatActivity {
             hp = 3;
         }
         nums = new int[] {R.drawable.heart, R.drawable.heart2, R.drawable.heart3};
-        hpImageView.setImageResource(nums[hp-1]);
+        binding.hpImageView.setImageResource(nums[hp-1]);
         setScore();
 
-        imdb.setOnClickListener(new View.OnClickListener() {
+        binding.imdb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openImdb(url);
@@ -185,7 +184,7 @@ public class QuoteActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void setScore() {
-        scoreTextView.setText("" + score);
+        binding.scoreTextView.setText("" + score);
     }
 
     private void nextDirector() {
@@ -196,7 +195,7 @@ public class QuoteActivity extends AppCompatActivity {
         uncolorButtons();
         buttonsVisible();
         filmNames.clear();
-        imdb.setClickable(false);
+        binding.scoreTextView.setClickable(false);
         filmName = quotes.get(cur).getFilmName();
         url = quotes.get(cur).getLink();
         String quote = quotes.get(cur).getText();
@@ -213,7 +212,7 @@ public class QuoteActivity extends AppCompatActivity {
         for(int i = 0;i < 4;i++) {
             buttons.get(i).setText(filmNames.get(i));
         }
-        textView.setText(quote);
+        binding.quoteTextView.setText(quote);
 
         for(int i = 0;i < 4;i++) {
             onButtonClick(buttons.get(i), filmName);
@@ -223,24 +222,14 @@ public class QuoteActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void iniXml() {
-        textView = findViewById(R.id.quoteTextView);
-        next = findViewById(R.id.nextQuoteImage);
-        Button button = findViewById(R.id.firstQuote);
-        buttons.add(button);
-        button = findViewById(R.id.secondQuote);
-        buttons.add(button);
-        button = findViewById(R.id.thirdQuote);
-        buttons.add(button);
-        button = findViewById(R.id.fourthQuote);
-        buttons.add(button);
+
+        buttons.add(binding.firstQuote);
+        buttons.add(binding.secondQuote);
+        buttons.add(binding.thirdQuote);
+        buttons.add(binding.fourthQuote);
         floatingActionButton = findViewById(R.id.settingsItem);
         setSoundIcon(floatingActionButton);
-        hpImageView = findViewById(R.id.hpImageView);
-        scoreTextView = findViewById(R.id.scoreTextView);
-        scoreTextView.setText("" +score);
-
-        imdb = findViewById(R.id.imdb);
-
+        binding.scoreTextView.setText("" +score);
         ImageView back = findViewById(R.id.backButton);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,9 +250,9 @@ public class QuoteActivity extends AppCompatActivity {
                 }
                 isAdvice = false;
                 isAnswered = true;
-                next.setImageResource(R.drawable.arrow_right_bg);
-                next.setClickable(true);
-                imdb.setClickable(true);
+                binding.nextQuoteImage.setImageResource(R.drawable.arrow_right_bg);
+                binding.nextQuoteImage.setClickable(true);
+                binding.imdb.setClickable(true);
                 if(button.getText().toString().equals(filmName)) {
                     score += 50;
                     if(sound) {
@@ -278,14 +267,14 @@ public class QuoteActivity extends AppCompatActivity {
                 if(hp == 0) {
                     noHp();
                 } else {
-                    hpImageView.setImageResource(nums[hp-1]);
+                    binding.hpImageView.setImageResource(nums[hp-1]);
                 }
-                scoreTextView.setText("" + score);
+                binding.scoreTextView.setText("" + score);
                 colorButtons(dirName);
                 Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.right_in);
-                imdb.startAnimation(animation);
-                imdb.setImageResource(R.drawable.imdb_logo);
-                imdb.setVisibility(View.VISIBLE);
+                binding.imdb.startAnimation(animation);
+                binding.imdb.setImageResource(R.drawable.imdb_logo);
+                binding.imdb.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -315,7 +304,7 @@ public class QuoteActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     showAd();
                     hp++;
-                    hpImageView.setImageResource(R.drawable.heart);
+                    binding.hpImageView.setImageResource(R.drawable.heart);
                     isAdUsed = true;
                 }
             });
@@ -359,7 +348,7 @@ public class QuoteActivity extends AppCompatActivity {
 
         iniXml();
 
-        next.setOnClickListener(new View.OnClickListener() {
+        binding.nextQuoteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(floatingActionsMenu.isExpanded()) {
@@ -367,9 +356,9 @@ public class QuoteActivity extends AppCompatActivity {
                 }
                 nextDirector();
                 isAnswered = false;
-                next.setClickable(false);
-                imdb.setVisibility(View.GONE);
-                next.setImageResource(R.drawable.arrow_right_transparent);
+                binding.nextQuoteImage.setClickable(false);
+                binding.nextQuoteImage.setImageResource(R.drawable.arrow_right_transparent);
+                binding.imdb.setVisibility(View.GONE);
             }
         });
     }
@@ -412,13 +401,13 @@ public class QuoteActivity extends AppCompatActivity {
                                 isAdvice = true;
                                 fiftyFifty();
                                 score -= 25;
-                                scoreTextView.setText("" + score);
+                                binding.scoreTextView.setText("" + score);
                             }
                         }
                     });
             builder.show();
         }
-        scoreTextView.setText("" + score);
+        binding.scoreTextView.setText("" + score);
     }
 
     private void buttonsVisible() {
@@ -458,7 +447,7 @@ public class QuoteActivity extends AppCompatActivity {
                 @Override
                 public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                     score += 25;
-                    scoreTextView.setText("" + score);
+                    binding.scoreTextView.setText("" + score);
                     createRewardedAd();
                 }
             };
