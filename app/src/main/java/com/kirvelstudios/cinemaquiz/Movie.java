@@ -1,24 +1,132 @@
 package com.kirvelstudios.cinemaquiz;
 
-import java.util.ArrayList;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Movie {
+    @SerializedName("adult")
+    @Expose
+    private Boolean adult;
+    @SerializedName("backdrop_path")
+    @Expose
+    private String backdropPath;
+    @SerializedName("genre_ids")
+    @Expose
+    private List<Integer> genreIds = null;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("original_language")
+    @Expose
+    private String originalLanguage;
+    @SerializedName("original_title")
+    @Expose
+    private String originalTitle;
+    @SerializedName("overview")
+    @Expose
+    private String overview;
+    @SerializedName("popularity")
+    @Expose
+    private Double popularity;
+    @SerializedName("poster_path")
+    @Expose
+    private String posterPath;
+    @SerializedName("release_date")
+    @Expose
+    private String releaseDate;
+    @SerializedName("title")
+    @Expose
     private String title;
-    private String posterUrl;
-    private String director;
-    private String id;
-    private int url;
-    private ArrayList <Integer> genreId;
+    @SerializedName("video")
+    @Expose
+    private Boolean video;
+    @SerializedName("vote_average")
+    @Expose
+    private Double voteAverage;
+    @SerializedName("vote_count")
+    @Expose
+    private Integer voteCount;
 
-    public Movie() {
+    public Boolean getAdult() {
+        return adult;
     }
 
-    public int getUrl() {
-        return url;
+    public void setAdult(Boolean adult) {
+        this.adult = adult;
     }
 
-    public void setUrl(int url) {
-        this.url = url;
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public List<Integer> getGenreIds() {
+        return genreIds;
+    }
+
+    public void setGenreIds(List<Integer> genreIds) {
+        this.genreIds = genreIds;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getOriginalLanguage() {
+        return originalLanguage;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public Double getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(Double popularity) {
+        this.popularity = popularity;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public String getTitle() {
@@ -29,35 +137,47 @@ public class Movie {
         this.title = title;
     }
 
-    public String getPosterUrl() {
-        return posterUrl;
+    public Boolean getVideo() {
+        return video;
     }
 
-    public void setPosterUrl(String posterUrl) {
-        this.posterUrl = posterUrl;
+    public void setVideo(Boolean video) {
+        this.video = video;
     }
 
-    public String getDirector() {
-        return director;
+    public Double getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setDirector(String director) {
-        this.director = director;
+    public void setVoteAverage(Double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
-    public String getId() {
-        return id;
+    public Integer getVoteCount() {
+        return voteCount;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
     }
 
-    public ArrayList<Integer> getGenreId() {
-        return genreId;
-    }
-
-    public void setGenreId(ArrayList<Integer> genreId) {
-        this.genreId = genreId;
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "adult=" + adult +
+                ", backdropPath='" + backdropPath + '\'' +
+                ", genreIds=" + genreIds +
+                ", id=" + id +
+                ", originalLanguage='" + originalLanguage + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", overview='" + overview + '\'' +
+                ", popularity=" + popularity +
+                ", posterPath='" + posterPath + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", title='" + title + '\'' +
+                ", video=" + video +
+                ", voteAverage=" + voteAverage +
+                ", voteCount=" + voteCount +
+                '}';
     }
 }

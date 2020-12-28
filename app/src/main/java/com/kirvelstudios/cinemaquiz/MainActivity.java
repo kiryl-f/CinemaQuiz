@@ -70,9 +70,11 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     region = localeUpCase;
                 }
-                intent.putExtra(
-                        "url",
-                        "https://api.themoviedb.org/3/movie/top_rated?api_key=33d65e0ed0777308653502b72db75fd0&language="+localeLowCase+'-'+localeUpCase+"&region="+region+"&page=");
+                intent.putExtra("key","33d65e0ed0777308653502b72db75fd0");
+                intent.putExtra("language", localeLowCase+'-'+localeUpCase);
+                intent.putExtra("region", region);
+                intent.putExtra("nameType", "title");
+                intent.putExtra("type", "movie");
                 intent.putExtra("tmdbLink1","https://api.themoviedb.org/3/movie/");
                 intent.putExtra("nameType", "title");
                 intent.putExtra("type", "movie");
