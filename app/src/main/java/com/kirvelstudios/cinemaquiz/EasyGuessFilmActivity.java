@@ -222,7 +222,7 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
     }
 
     private void createRewardedAd() {
-        rewardedAd = new RewardedAd(this, "ca-app-pub-2610039287877034/8745403536");
+        rewardedAd = new RewardedAd(this, "your add id");
         RewardedAdLoadCallback loadCallback = new RewardedAdLoadCallback() {
             @Override
             public void onRewardedAdFailedToLoad(int i) {
