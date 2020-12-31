@@ -192,7 +192,7 @@
         ads:adSize="BANNER"
         android:layout_below="@id/guessQuoteLayout"
         android:layout_marginTop="20dp"
-        ads:adUnitId="ca-app-pub-2610039287877034/4973362251">
+        ads:adUnitId="your add id">
     </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>
