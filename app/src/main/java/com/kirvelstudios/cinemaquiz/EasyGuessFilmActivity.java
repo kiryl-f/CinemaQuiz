@@ -155,7 +155,7 @@ public class EasyGuessFilmActivity extends AppCompatActivity {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
         tmdbLink1 = intent.getStringExtra("tmdbLink1");
-        tmdbLink2 = "?api_key=33d65e0ed0777308653502b72db75fd0&language=ru-RU";
+        tmdbLink2 = "?api_key=*key*language=ru-RU";
         nameType = intent.getStringExtra("nameType");
         type = intent.getStringExtra("type");
         language = intent.getStringExtra("language");
